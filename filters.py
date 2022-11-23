@@ -18,6 +18,8 @@ You'll edit this file in Tasks 3a and 3c.
 """
 import operator
 
+import models
+
 
 class UnsupportedCriterionError(NotImplementedError):
     """A filter criterion is unsupported."""
@@ -72,6 +74,51 @@ class AttributeFilter:
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
 
+class DateFilter(AttributeFilter):
+    """
+    A subclass of AttributeFilter for filtering close approaches by a date value
+    """
+    @classmethod
+    def get(cls, approach: models.CloseApproach):
+        return approach.time.date()
+
+
+class DistanceFilter(AttributeFilter):
+    """
+    A subclass of AttributeFilter for filtering close approaches on its distance from earth
+    """
+    @classmethod
+    def get(cls, approach: models.CloseApproach):
+        return approach.distance
+
+
+class VelocityFilter(AttributeFilter):
+    """
+    A subclass of AttributeFilter for filtering close approaches on its velocity
+    """
+    @classmethod
+    def get(cls, approach: models.CloseApproach):
+        return approach.velocity
+
+
+class DiameterFilter(AttributeFilter):
+    """
+    A subclass of AttributeFilter for filtering Neos on its diameter
+    """
+    @classmethod
+    def get(cls, approach: models.CloseApproach):
+        return approach.neo.diameter
+
+
+class HazardousFilter(AttributeFilter):
+    """
+    A subclass of AttributeFilter for filtering Neos on its hazardous attribute
+    """
+    @classmethod
+    def get(cls, approach: models.CloseApproach):
+        return approach.neo.hazardous
+
+
 def create_filters(
         date=None, start_date=None, end_date=None,
         distance_min=None, distance_max=None,
@@ -108,8 +155,39 @@ def create_filters(
     :param hazardous: Whether the NEO of a matching `CloseApproach` is potentially hazardous.
     :return: A collection of filters for use with `query`.
     """
-    # TODO: Decide how you will represent your filters.
-    return ()
+    # Decide how you will represent your filters.
+    filters = []
+    if date is not None:
+        filters.append(DateFilter(operator.eq, date))
+
+    if start_date is not None:
+        filters.append(DateFilter(operator.ge, start_date))
+
+    if end_date is not None:
+        filters.append(DateFilter(operator.le, end_date))
+
+    if distance_min is not None:
+        filters.append(DistanceFilter(operator.ge, distance_min))
+
+    if distance_max is not None:
+        filters.append(DistanceFilter(operator.le, distance_max))
+
+    if velocity_min is not None:
+        filters.append(VelocityFilter(operator.ge, velocity_min))
+
+    if velocity_max is not None:
+        filters.append(VelocityFilter(operator.le, velocity_max))
+
+    if diameter_min is not None:
+        filters.append(DiameterFilter(operator.ge, diameter_min))
+
+    if diameter_max is not None:
+        filters.append(DiameterFilter(operator.le, diameter_max))
+
+    if hazardous is not None:
+        filters.append(HazardousFilter(operator.eq, hazardous))
+
+    return filters
 
 
 def limit(iterator, n=None):
