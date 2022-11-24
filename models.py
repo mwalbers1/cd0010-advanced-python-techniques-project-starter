@@ -33,6 +33,7 @@ class NearEarthObject:
     initialized to an empty collection, but eventually populated in the
     `NEODatabase` constructor.
     """
+
     # How can you, and should you, change the arguments to this constructor?
     # If you make changes, be sure to update the comments in this file.
     def __init__(self, **info):
@@ -76,7 +77,6 @@ class NearEarthObject:
     @property
     def fullname(self):
         """Return a representation of the full name of this NEO."""
-
         # Use self.designation and self.name to build a fullname for this object.
         fullname_str = self.designation
 
@@ -115,11 +115,7 @@ class NearEarthObject:
                f"diameter={self.diameter:.3f}, hazardous={self.hazardous!r})"
 
     def serialize(self):
-        """
-        Return serialized Near Earth Object (NEO) as a dictionary
-
-        example: Return {'designation': '433', 'name': 'Eros', 'diameter_km': 16.84, 'potentially_hazardous': False}
-        """
+        """Return serialized Near Earth Object (NEO) as a dictionary."""
         neo_dict = {'designation': self.designation,
                     'name': self.fullname,
                     'diameter_km': self.diameter,
@@ -140,6 +136,7 @@ class CloseApproach:
     private attribute, but the referenced NEO is eventually replaced in the
     `NEODatabase` constructor.
     """
+
     # How can you, and should you, change the arguments to this constructor?
     # If you make changes, be sure to update the comments in this file.
     def __init__(self, **info):
@@ -209,7 +206,10 @@ class CloseApproach:
 
     @property
     def full_name(self):
-        # Use self.designation and self.name to build a fullname for this object.
+        """Use self.designation and self.name to build a fullname for this object.
+
+        Return full name for this close approach object.
+        """
         if self.neo is None:
             if self._designation is None:
                 return 'None'
@@ -231,8 +231,7 @@ class CloseApproach:
                f"velocity={self.velocity:.2f}, neo={self.neo!r})"
 
     def serialize(self):
-        """
-        Return serialized CloseApproach object as dictionary
+        """Return serialized CloseApproach object as dictionary.
 
         example: Return {'datetime_utc': '2025-11-30 02:18', 'distance_au': 0.397647483265833, 'velocity_km_s': 3.72885069167641}
         """

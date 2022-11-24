@@ -40,6 +40,7 @@ class AttributeFilter:
     Concrete subclasses can override the `get` classmethod to provide custom
     behavior to fetch a desired attribute from the given `CloseApproach`.
     """
+
     def __init__(self, op, value):
         """Construct a new `AttributeFilter` from an binary predicate and a reference value.
 
@@ -71,56 +72,52 @@ class AttributeFilter:
         raise UnsupportedCriterionError
 
     def __repr__(self):
+        """Return `repr(self)`, a computer-readable string representation of this object."""
         return f"{self.__class__.__name__}(op=operator.{self.op.__name__}, value={self.value})"
 
 
 class DateFilter(AttributeFilter):
-    """
-    A subclass of AttributeFilter for filtering close approaches by a date value
-    """
+    """A subclass of AttributeFilter for filtering close approaches by a date value."""
+
     @classmethod
     def get(cls, approach: models.CloseApproach):
-        """Override superclass get method to return Date attribute"""
+        """Override superclass get method to return Date attribute."""
         return approach.time.date()
 
 
 class DistanceFilter(AttributeFilter):
-    """
-    A subclass of AttributeFilter for filtering close approaches on its distance from earth
-    """
+    """A subclass of AttributeFilter for filtering close approaches on its distance from earth."""
+
     @classmethod
     def get(cls, approach: models.CloseApproach):
-        """Override superclass get method to return Distance attribute"""
+        """Override superclass get method to return Distance attribute."""
         return approach.distance
 
 
 class VelocityFilter(AttributeFilter):
-    """
-    A subclass of AttributeFilter for filtering close approaches on its velocity
-    """
+    """A subclass of AttributeFilter for filtering close approaches on its velocity."""
+
     @classmethod
     def get(cls, approach: models.CloseApproach):
-        """Override superclass get method to return Velocity attribute"""
+        """Override superclass get method to return Velocity attribute."""
         return approach.velocity
 
 
 class DiameterFilter(AttributeFilter):
-    """
-    A subclass of AttributeFilter for filtering Neos on its diameter
-    """
+    """A subclass of AttributeFilter for filtering Neos on its diameter."""
+
     @classmethod
     def get(cls, approach: models.CloseApproach):
-        """Override superclass get method to return Diameter attribute"""
+        """Override superclass get method to return Diameter attribute."""
         return approach.neo.diameter
 
 
 class HazardousFilter(AttributeFilter):
-    """
-    A subclass of AttributeFilter for filtering Neos on its hazardous attribute
-    """
+    """A subclass of AttributeFilter for filtering Neos on its hazardous attribute."""
+
     @classmethod
     def get(cls, approach: models.CloseApproach):
-        """Override superclass get method to return Hazardous attribute"""
+        """Override superclass get method to return Hazardous attribute."""
         return approach.neo.hazardous
 
 
@@ -204,7 +201,6 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
-
     # Produce at most `n` values from the given iterator.
     if n == 0 or n is None:
         return iterator
