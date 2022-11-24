@@ -33,7 +33,7 @@ class NearEarthObject:
     initialized to an empty collection, but eventually populated in the
     `NEODatabase` constructor.
     """
-    # TODO: How can you, and should you, change the arguments to this constructor?
+    # How can you, and should you, change the arguments to this constructor?
     # If you make changes, be sure to update the comments in this file.
     def __init__(self, **info):
         """Create a new `NearEarthObject`.
@@ -46,19 +46,28 @@ class NearEarthObject:
         # handle any edge cases, such as a empty name being represented by `None`
         # and a missing diameter being represented by `float('nan')`.
         # Initialize string variable for hazardous message referenced in __str__ method.
-        self.designation = str(info.get('pdes', 'None'))
 
+        # Coerce designation to str type
+        self.designation = str(info.get('pdes', None))
+        if self.designation == '':
+            self.designation = None
+
+        # Coerce name to str type
         self.name = str(info.get('name', None))
         if self.name == '':
             self.name = None
 
+        # Coerce diameter to float type
         diam = info.get('diameter', float('nan'))
         if diam == '':
             self.diameter = float('nan')
         else:
             self.diameter = float(diam)
 
+        # Coerce hazardous attribute to boolean type
         self.hazardous = info.get('pha', 'None') == 'Y'
+
+        # Define hazardous message part
         self.hazardous_str = info.get('pha', 'None')
 
         # Create an empty initial collection of linked approaches.
@@ -67,10 +76,14 @@ class NearEarthObject:
     @property
     def fullname(self):
         """Return a representation of the full name of this NEO."""
+
         # Use self.designation and self.name to build a fullname for this object.
         fullname_str = self.designation
-        if self.name is not None:
+
+        if (fullname_str is not None) and (self.name is not None):
             fullname_str += ' (' + self.name + ')'
+        elif fullname_str is None:
+            fullname_str = 'None'
 
         return fullname_str
 
@@ -80,7 +93,7 @@ class NearEarthObject:
         # The project instructions include one possibility. Peek at the __repr__
         # method for examples of advanced string formatting.
 
-        # hazardous message logic
+        # Define hazardous message part
         if self.hazardous_str == 'None':
             hazard_str = "[is/is not]"
         elif self.hazardous:
@@ -88,7 +101,7 @@ class NearEarthObject:
         else:
             hazard_str = "is not"
 
-        # diameter message logic
+        # Define diameter message part
         if math.isnan(self.diameter):
             diameter_str = "undefined"
         else:
@@ -127,7 +140,7 @@ class CloseApproach:
     private attribute, but the referenced NEO is eventually replaced in the
     `NEODatabase` constructor.
     """
-    # TODO: How can you, and should you, change the arguments to this constructor?
+    # How can you, and should you, change the arguments to this constructor?
     # If you make changes, be sure to update the comments in this file.
     def __init__(self, **info):
         """Create a new `CloseApproach`.
@@ -138,10 +151,36 @@ class CloseApproach:
         # onto attributes named `_designation`, `time`, `distance`, and `velocity`.
         # You should coerce these values to their appropriate data type and handle any edge cases.
         # The `cd_to_datetime` function will be useful.
-        self._designation = str(info.get('des', 'None'))
-        self.time = cd_to_datetime(info.get('cd', 'None'))  # Use the cd_to_datetime function for this attribute.
-        self.distance = float(info.get('dist', float('nan')))
-        self.velocity = float(info.get('v_rel', float('nan')))
+
+        # Coerce self._designation to str type
+        self._designation = str(info.get('des', None))
+        if self._designation == '':
+            self._designation = None
+
+        # Check for null or blank cd (calendar date)
+        cd = str(info.get('cd', None))
+        if cd == '':
+            cd = None
+
+        # Call cd_to_datetime function to format the calendar date
+        if cd is not None:
+            self.time = cd_to_datetime(cd)
+        else:
+            self.time = None
+
+        # Nominal approach distance in astronomical units (au) to Earth at closest point
+        self.distance = info.get('dist', float('nan'))
+        if self.distance == '':
+            self.distance = float('nan')
+        else:
+            self.distance = float(self.distance)
+
+        # Velocity in kilometers (km) per second relative Earth at closest point
+        self.velocity = info.get('v_rel', float('nan'))
+        if self.velocity == '':
+            self.velocity = float('nan')
+        else:
+            self.velocity = float(self.velocity)
 
         # Create an attribute for the referenced NEO, originally None.
         self.neo = None
@@ -161,14 +200,21 @@ class CloseApproach:
         """
         # Use this object's `.time` attribute and the `datetime_to_str` function to
         # build a formatted representation of the approach time.
-        formatted_datetime_str = datetime_to_str(self.time)
+        if self.time is not None:
+            formatted_datetime_str = datetime_to_str(self.time)
+        else:
+            formatted_datetime_str = 'Undefined'
+
         return formatted_datetime_str
 
     @property
     def full_name(self):
-        # TODO: Use self.designation and self.name to build a fullname for this object.
+        # Use self.designation and self.name to build a fullname for this object.
         if self.neo is None:
-            return self._designation
+            if self._designation is None:
+                return 'None'
+            else:
+                return self._designation
         else:
             return self.neo.fullname
 

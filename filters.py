@@ -80,6 +80,7 @@ class DateFilter(AttributeFilter):
     """
     @classmethod
     def get(cls, approach: models.CloseApproach):
+        """Override superclass get method to return Date attribute"""
         return approach.time.date()
 
 
@@ -89,6 +90,7 @@ class DistanceFilter(AttributeFilter):
     """
     @classmethod
     def get(cls, approach: models.CloseApproach):
+        """Override superclass get method to return Distance attribute"""
         return approach.distance
 
 
@@ -98,6 +100,7 @@ class VelocityFilter(AttributeFilter):
     """
     @classmethod
     def get(cls, approach: models.CloseApproach):
+        """Override superclass get method to return Velocity attribute"""
         return approach.velocity
 
 
@@ -107,6 +110,7 @@ class DiameterFilter(AttributeFilter):
     """
     @classmethod
     def get(cls, approach: models.CloseApproach):
+        """Override superclass get method to return Diameter attribute"""
         return approach.neo.diameter
 
 
@@ -116,6 +120,7 @@ class HazardousFilter(AttributeFilter):
     """
     @classmethod
     def get(cls, approach: models.CloseApproach):
+        """Override superclass get method to return Hazardous attribute"""
         return approach.neo.hazardous
 
 
@@ -199,6 +204,7 @@ def limit(iterator, n=None):
     :param n: The maximum number of values to produce.
     :yield: The first (at most) `n` values from the iterator.
     """
+
     # Produce at most `n` values from the given iterator.
     if n == 0 or n is None:
         return iterator
