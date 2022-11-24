@@ -69,7 +69,7 @@ class NearEarthObject:
         """Return a representation of the full name of this NEO."""
         # Use self.designation and self.name to build a fullname for this object.
         fullname_str = self.designation
-        if self.name != 'None':
+        if self.name is not None:
             fullname_str += ' (' + self.name + ')'
 
         return fullname_str
@@ -100,6 +100,18 @@ class NearEarthObject:
         """Return `repr(self)`, a computer-readable string representation of this object."""
         return f"NearEarthObject(designation={self.designation!r}, name={self.name!r}, " \
                f"diameter={self.diameter:.3f}, hazardous={self.hazardous!r})"
+
+    def serialize(self):
+        """
+        Return serialized Near Earth Object (NEO) as a dictionary
+
+        example: Return {'designation': '433', 'name': 'Eros', 'diameter_km': 16.84, 'potentially_hazardous': False}
+        """
+        neo_dict = {'designation': self.designation,
+                    'name': self.fullname,
+                    'diameter_km': self.diameter,
+                    'potentially_hazardous': self.hazardous}
+        return neo_dict
 
 
 class CloseApproach:
@@ -171,3 +183,14 @@ class CloseApproach:
         """Return `repr(self)`, a computer-readable string representation of this object."""
         return f"CloseApproach(time={self.time_str!r}, distance={self.distance:.2f}, " \
                f"velocity={self.velocity:.2f}, neo={self.neo!r})"
+
+    def serialize(self):
+        """
+        Return serialized CloseApproach object as dictionary
+
+        example: Return {'datetime_utc': '2025-11-30 02:18', 'distance_au': 0.397647483265833, 'velocity_km_s': 3.72885069167641}
+        """
+        approach_dict = {'datetime_utc': self.time_str,
+                         'distance_au': self.distance,
+                         'velocity_km_s': self.velocity}
+        return approach_dict
